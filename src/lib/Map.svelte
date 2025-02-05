@@ -1,9 +1,12 @@
 <script lang="ts">
   import * as PIXI from 'pixi.js'
+  import { GraphEditor } from './tools/graphEditor';
+
   let map: any;
-  let container: any
-  let pixiCanvas: any
-  let sprite: PIXI.Sprite
+  let container: any;
+  let pixiCanvas: any;
+  let sprite: PIXI.Sprite;
+  let graphEditor: GraphEditor;
 
   async function init() {
       const app = new PIXI.Application()
@@ -13,13 +16,16 @@
       })
       pixiCanvas = document.getElementById('pixiCanvas');
       pixiCanvas?.appendChild(app.canvas)
+
       await PIXI.Assets.load('favicon.png');
       sprite = PIXI.Sprite.from('favicon.png');
       sprite.x += 10
       sprite.y += 10
       sprite.width = 50;  // 스프라이트 크기 조정
       sprite.height = 50;
-      app.stage.addChild(sprite)
+      app.stage.addChild(sprite);
+
+      graphEditor = new GraphEditor(app);
     }
 
   $effect(() => {
