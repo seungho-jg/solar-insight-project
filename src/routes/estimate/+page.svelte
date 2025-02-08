@@ -1,41 +1,58 @@
-<script>
+<script lang="ts">
   import Map from '$lib/pages/Map.svelte';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
   import { editorStore } from '$lib/store/editorStore';
   import Input from '$lib/components/ui/input/input.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
   import { writable } from 'svelte/store';
+  import { kakaoMap } from '$lib/store/mapStore'
+
   let address = '';
-  let searchResults = writable([]);
+  let searchResults = writable<any>([]);
+  let isKakaoLoaded = false;
 
-  function searchAddress() {
-  //   const geocoder = new window.kakao.map.services.Geocoder();
-
-  //   geocoder.addressSearch(address, function(result, status) {
-  //     if (status === window.kakao.maps.services.Status.OK) {
-  //       searchResults.set(result);
-  //       console.log(result)
-  //     } else {
-  //       alert('주소 검색에 실패했습니다.');
-  //     }
-  //   })
+  function handleLoad() {
+    window.kakao.maps.load(() => {
+      isKakaoLoaded = true;
+    });
   }
+  function handleMove() {
+    const result = $searchResults[0];  // 첫 번째 검색 결과 사용
+    const moveLatLng = new window.kakao.maps.LatLng(result.y, result.x);
+    $kakaoMap.setCenter(moveLatLng);
+  }
+  function handleSearch() {
+    if (isKakaoLoaded) {
+      const geocoder = new window.kakao.maps.services.Geocoder();
 
+      geocoder.addressSearch(address, function(result: any, status: any) {
+      if (status === window.kakao.maps.services.Status.OK) {
+        searchResults.set(result);
+      } else {
+        alert('주소 검색에 실패했습니다.');
+      }
+    });
+    }
+  }
 </script>
 
 <svelte:head>
   <title>Home</title>
-  <script src={`http://dapi.kakao.com/v2/maps/sdk.js?appkey=${PUBLIC_KAKAO_MAP_API_KEY}&libraries=services`}></script> 
+  <script 
+    async
+    src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`}
+    onload={handleLoad}
+  ></script>
 </svelte:head>
 
 <div class="fixed flex flex-col top-4 z-20 items-center justify-center w-screen translate-x-5">
   <div class="flex flex-row gap-3 opacity-90">
     <Input type="text" bind:value={address} placeholder="주소를 입력해주세요"></Input>
-    <Button onclick={searchAddress}>검색</Button>
+    <Button onclick={handleSearch}>검색</Button>
   </div>
   <ul>
     {#each $searchResults as result}
-      <li>{result.address_name}</li>
+      <button class="bg-white p-3" onclick={handleMove}>{result.address_name}</button>
     {/each}
   </ul>
 </div>
@@ -52,5 +69,7 @@
   </Button>
 </div>
 <section class="w-full h-full">
+  {#if isKakaoLoaded}
   <Map/>
+  {/if}
 </section>

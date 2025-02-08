@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Button from '$lib/components/ui/button/button.svelte';
   import { goto } from '$app/navigation';
   function handleClick() {
@@ -11,7 +11,6 @@
 </svelte:head>
 
 <div class="px-2 w-full z-20 bottom-4 flex flex-row fixed items-center justify-center gap-5">
-
   <Button onclick={handleClick}>
     견적내러가기
   </Button>

@@ -49,8 +49,6 @@ export class GraphEditor {
       this.addPoint(new Point(pos.x, pos.y));
   }
 
-
-
   updatePolygonPosition() {
     // 저장된 위경도 좌표를 기반으로 폴리곤 위치 업데이트
     this.polygon.points = this.latLngPoints.map(latLng => {
@@ -67,6 +65,7 @@ export class GraphEditor {
     this.polygon.addPoint(point);
     this.draw();
   }
+
   draw(){
     this.graphics.clear();
 

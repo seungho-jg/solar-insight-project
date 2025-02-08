@@ -2,15 +2,14 @@
   import * as PIXI from 'pixi.js'
   import { GraphEditor } from '../tools/graphEditor';
   import { editorStore } from '../store/editorStore';
-  import { onMount } from 'svelte';
-
+  import { kakaoMap } from '$lib/store/mapStore'
   let map: any;
   let container: any;
   let pixiCanvas: any;
   let sprite: PIXI.Sprite;
   let graphEditor: GraphEditor;
   
-  onMount(() => {
+  $effect(() => {
     // graphEditor가 생성된 후 스토어 구독
     const unsubscribe = editorStore.subscribe(state => {
       if (graphEditor) {
@@ -41,22 +40,21 @@
       sprite.height = 50;
       app.stage.addChild(sprite);
 
-      graphEditor = new GraphEditor(app, map);
+      graphEditor = new GraphEditor(app, $kakaoMap);
   }
 
   $effect(() => {
     container = document.getElementById('map');
-
     async function initMap() {
       const options = {
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
           level: 2
       };
-      map = new window.kakao.maps.Map(container, options);
+      // map = new window.kakao.maps.Map(container, options);
+      kakaoMap.set(new window.kakao.maps.Map(container, options))
       await initPixi()
     }
     initMap()
-
   });
 </script>
 <div>
