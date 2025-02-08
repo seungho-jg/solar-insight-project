@@ -1,26 +1,18 @@
 <script>
-  import Map from '../lib/Map.svelte';
-  import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
-  import { editorStore } from '$lib/store/editorStore';
-
+  import Button from '$lib/components/ui/button/button.svelte';
+  import { goto } from '$app/navigation';
+  function handleClick() {
+    goto('/estimate')
+  }
 </script>
 
 <svelte:head>
   <title>Home</title>
-  <script src={`http://dapi.kakao.com/v2/maps/sdk.js?appkey=${PUBLIC_KAKAO_MAP_API_KEY}`}></script> 
 </svelte:head>
 
-<div class="w-full z-20 bottom-4 flex flex-row fixed items-center justify-center gap-5">
-  <button 
-    class="bg-slate-400 px-6 py-3 rounded-xl opacity-35 hover:opacity-100 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-    onclick={editorStore.toggleEditing}
-    >
-    영역선택
-  </button>
-  <button class="bg-slate-400 px-6 py-3 rounded-xl opacity-35 hover:opacity-100 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold">
-    견적내기
-  </button>
+<div class="px-2 w-full z-20 bottom-4 flex flex-row fixed items-center justify-center gap-5">
+
+  <Button onclick={handleClick}>
+    견적내러가기
+  </Button>
 </div>
-<section class="w-full h-full">
-  <Map/>
-</section>

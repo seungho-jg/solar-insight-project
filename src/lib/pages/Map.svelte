@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as PIXI from 'pixi.js'
-  import { GraphEditor } from './tools/graphEditor';
-  import { editorStore } from '$lib/store/editorStore';
+  import { GraphEditor } from '../tools/graphEditor';
+  import { editorStore } from '../store/editorStore';
   import { onMount } from 'svelte';
 
   let map: any;
@@ -18,7 +18,6 @@
         graphEditor.isDrawing = state.isEditing;
       }
     });
-
     // 컴포넌트 언마운트 시 구독 해제
     return unsubscribe;
   });
@@ -34,9 +33,8 @@
       pixiCanvas.style.pointerEvents = 'none';  // PIXI 캔버스의 이벤트를 비활성화
       pixiCanvas?.appendChild(app.canvas)
 
-
-      await PIXI.Assets.load('favicon.png');
-      sprite = PIXI.Sprite.from('favicon.png');
+      await PIXI.Assets.load('/favicon.png');
+      sprite = PIXI.Sprite.from('/favicon.png');
       sprite.x += 10
       sprite.y += 10
       sprite.width = 50;  // 스프라이트 크기 조정
