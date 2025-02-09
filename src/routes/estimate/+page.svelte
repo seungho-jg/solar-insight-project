@@ -6,6 +6,7 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import { writable } from 'svelte/store';
   import { kakaoMap } from '$lib/store/mapStore'
+  import { fly } from 'svelte/transition';
 
   let address = '';
   let searchResults = writable<any>([]);
@@ -55,8 +56,11 @@
     onload={handleLoad}
   ></script>
 </svelte:head>
-
-<div class="fixed flex flex-col top-4 z-20 items-center justify-center w-screen translate-x-5">
+{#if !$editorStore.isEditing}
+<div
+  in:fly={{y: -25}}
+  out:fly={{y: -25}}
+  class="fixed flex flex-col top-4 z-20 items-center justify-center w-screen translate-x-5">
   <div class="flex flex-row gap-3 opacity-90">
     <Input type="text" bind:value={address} placeholder="주소를 입력해주세요"></Input>
     <Button onclick={handleSearch}>검색</Button>
@@ -70,25 +74,34 @@
     {/each}
   </div>
 </div>
+{/if}
 
 <div class="px-2 w-full z-20 bottom-4 flex flex-row fixed items-center justify-center gap-5">
   {#if !$editorStore.isEditing}
-  <Button 
-    class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-    onclick={handleEstimateBtn}
-    >
-    영역선택
-  </Button>
+  <div
+  in:fly={{ y: 20 }} 
+  >
+    <Button 
+      class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+      onclick={handleEstimateBtn}
+      >
+      영역선택
+    </Button>
+  </div>
   {:else}
-  <Button 
-    class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-    onclick={handleEstimateCancel}
-    >
-    선택해제
-  </Button>
-  <Button class="bg-slate-400 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold">
-    견적내기
-  </Button>
+  <div 
+    in:fly={{ y: 20 }} 
+  >
+    <Button 
+      class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+      onclick={handleEstimateCancel}
+      >
+      선택해제
+    </Button>
+    <Button class="bg-slate-400 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold">
+      견적내기
+    </Button>
+  </div>
   {/if}
 </div>
 <section class="w-full h-full">
