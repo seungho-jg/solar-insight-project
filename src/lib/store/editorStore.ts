@@ -1,11 +1,14 @@
 import { writable } from 'svelte/store';
+import type { GraphEditor } from '../tools/graphEditor';
 
 interface EditorState {
   isEditing: boolean;
+  graphEditor: GraphEditor | null
 }
 
 const initialState: EditorState = {
-  isEditing: false
+  isEditing: false,
+  graphEditor: null
 };
 
 function createEditorStore() {
@@ -14,7 +17,7 @@ function createEditorStore() {
   return {
     subscribe,
     toggleEditing: () => update(state => ({ ...state, isEditing: !state.isEditing })),
-    reset: () => set({ isEditing: false })
+    reset: (graphEditor: GraphEditor) => set({ isEditing: false, graphEditor })
   };
 }
 

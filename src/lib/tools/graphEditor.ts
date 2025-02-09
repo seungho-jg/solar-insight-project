@@ -24,7 +24,7 @@ export class GraphEditor {
 
   #addEventListeners() {
      // 카카오맵 클릭 이벤트 등록
-     window.kakao.maps.event.addListener(this.map, 'click', this.#handleMouseClick.bind(this))
+    window.kakao.maps.event.addListener(this.map, 'click', this.#handleMouseClick.bind(this))
 
     window.kakao.maps.event.addListener(this.map, 'bounds_changed', () => {
       this.updatePolygonPosition();
@@ -64,6 +64,12 @@ export class GraphEditor {
   addPoint(point: Point) {
     this.polygon.addPoint(point);
     this.draw();
+  }
+
+  reset(){
+    this.polygon.points = [];
+    this.polygon.segments = [];
+    this.draw()
   }
 
   draw(){

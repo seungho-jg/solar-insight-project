@@ -3,7 +3,7 @@
   import { GraphEditor } from '../tools/graphEditor';
   import { editorStore } from '../store/editorStore';
   import { kakaoMap } from '$lib/store/mapStore'
-  let map: any;
+
   let container: any;
   let pixiCanvas: any;
   let sprite: PIXI.Sprite;
@@ -41,6 +41,7 @@
       app.stage.addChild(sprite);
 
       graphEditor = new GraphEditor(app, $kakaoMap);
+      editorStore.reset(graphEditor)
   }
 
   $effect(() => {
@@ -48,7 +49,7 @@
     async function initMap() {
       const options = {
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
-          level: 2
+          level: 3
       };
       // map = new window.kakao.maps.Map(container, options);
       kakaoMap.set(new window.kakao.maps.Map(container, options))
