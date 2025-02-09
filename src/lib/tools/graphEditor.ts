@@ -69,6 +69,7 @@ export class GraphEditor {
   reset(){
     this.polygon.points = [];
     this.polygon.segments = [];
+    this.latLngPoints = [];  
     this.draw()
   }
 
