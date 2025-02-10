@@ -7,7 +7,7 @@
   let container: any;
   let pixiCanvas: any;
   let sprite: PIXI.Sprite;
-  let graphEditor: GraphEditor;
+  let graphEditor = $state<GraphEditor>();
   
   $effect(() => {
     // graphEditor가 생성된 후 스토어 구독
@@ -51,7 +51,6 @@
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
           level: 3
       };
-      // map = new window.kakao.maps.Map(container, options);
       kakaoMap.set(new window.kakao.maps.Map(container, options))
       $kakaoMap.setCursor('move')
       await initPixi()
@@ -61,5 +60,5 @@
 </script>
 <div>
   <div id="pixiCanvas" class="w-screen h-screen absolute z-10"></div>
-  <div id="map" class="w-screen h-screen opacity-95"></div>
+  <div id="map" class="w-screen h-screen opacity-95" class:opacity-70={$editorStore.isComplete}></div>
 </div>

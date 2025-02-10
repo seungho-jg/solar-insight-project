@@ -1,5 +1,6 @@
 <script lang="ts">
   import Map from '$lib/pages/Map.svelte';
+  import {Alert, AlertTitle, AlertDescription} from '$lib/components/ui/alert';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
   import { editorStore } from '$lib/store/editorStore';
   import Input from '$lib/components/ui/input/input.svelte';
@@ -8,9 +9,12 @@
   import { kakaoMap } from '$lib/store/mapStore'
   import { fly } from 'svelte/transition';
 
-  let address = '';
+  let address = $state('');
   let searchResults = writable<any>([]);
-  let isKakaoLoaded = false;
+  let isKakaoLoaded = $state(false);
+  let errorMsg = $state('');
+
+  let showAlert = $state(false);
 
   function handleLoad() {
     window.kakao.maps.load(() => {
@@ -32,7 +36,11 @@
       if (status === window.kakao.maps.services.Status.OK) {
         searchResults.set(result);
       } else {
-        alert('주소 검색에 실패했습니다.');
+        errorMsg = '주소 검색에 실패했습니다.'
+        showAlert = true;
+        setTimeout(() => {
+          showAlert = false;
+        }, 1000); // 3초 후 알림 숨김
       }
     });
     }
@@ -50,8 +58,17 @@
     $kakaoMap.setDraggable(true);
     $kakaoMap.setCursor('move');
   }
-  function handleCompleteSelect() {
 
+  function handleCompleteSelect() {
+    if (!$editorStore.graphEditor?.polygon?.points?.length || $editorStore.graphEditor.polygon.points.length < 3) {
+      errorMsg = '최소 점 3개 이상이 필요합니다 !'
+      showAlert = true;
+      setTimeout(() => {
+        showAlert = false;
+      }, 2000); // 3초 후 알림 숨김
+      return;
+    }
+    editorStore.toggleComplete();
   }
 </script>
 
@@ -63,7 +80,17 @@
     onload={handleLoad}
   ></script>
 </svelte:head>
-{#if !$editorStore.isEditing}
+
+{#if showAlert}
+  <div class="fixed top-4 left-1/2 -translate-x-1/2 z-30" transition:fly={{ y: -20 }}>
+    <Alert variant="destructive" class="bg-white shadow-lg border-2 py-2">
+      <!-- <AlertTitle level={1}>다시</AlertTitle> -->
+      <AlertDescription>{errorMsg}</AlertDescription>
+    </Alert>
+  </div>
+{/if}
+
+{#if !$editorStore.isEditing&&!$editorStore.isComplete}
 <div
   in:fly={{y: -25}}
   out:fly={{y: -25}}
@@ -84,7 +111,7 @@
 {/if}
 
 <div class="px-2 w-full z-20 bottom-4 flex flex-row fixed items-center justify-center gap-5">
-  {#if !$editorStore.isEditing}
+  {#if !$editorStore.isEditing&&!$editorStore.isComplete}
   <div
   in:fly={{ y: 20 }} 
   >
@@ -95,7 +122,7 @@
       영역선택
     </Button>
   </div>
-  {:else}
+  {:else if $editorStore.isEditing&&!$editorStore.isComplete}
   <div 
     in:fly={{ y: 20 }} 
   >
@@ -110,6 +137,14 @@
       onclick={handleCompleteSelect}
       >
       선택완료
+    </Button>
+  </div>
+  {:else}
+  <div
+    in:fly={{ y: 20 }} 
+  >
+    <Button>
+      견적내기
     </Button>
   </div>
   {/if}

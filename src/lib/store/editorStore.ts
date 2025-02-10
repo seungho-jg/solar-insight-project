@@ -19,6 +19,7 @@ function createEditorStore() {
   return {
     subscribe,
     toggleEditing: () => update(state => ({ ...state, isEditing: !state.isEditing })),
+    toggleComplete: () => update(state => ({...state, isComplete: !state.isComplete})),
     reset: (graphEditor: GraphEditor) => set({ isEditing: false, isComplete: false, graphEditor })
   };
 }
