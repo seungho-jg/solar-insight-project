@@ -9,6 +9,7 @@ export class GraphEditor {
   polygon: Polygon;
   isDrawing: boolean;
   private latLngPoints: Array<{lat: number, lng: number}>
+  cursor: [x: number, y: number]
 
   constructor(app: PIXI.Application, map: any) {
     this.app = app;
@@ -17,6 +18,7 @@ export class GraphEditor {
     this.polygon = new Polygon();
     this.isDrawing = false;
     this.latLngPoints = [];
+    this.cursor = [-1, -1];
 
     app.stage.addChild(this.graphics);
     this.#addEventListeners();
@@ -29,6 +31,9 @@ export class GraphEditor {
     window.kakao.maps.event.addListener(this.map, 'bounds_changed', () => {
       this.updatePolygonPosition();
     });
+
+    // window.addEventListener('mousemove', (e : MouseEvent)=>{
+    // })
     
     // window.kakao.maps.event.addListener(this.map, 'drag', () => {
     //   this.updatePolygonPosition();
@@ -79,7 +84,7 @@ export class GraphEditor {
     // 선 그리기
     this.graphics.setStrokeStyle({
       width: 2,
-      color: 0x000000
+      color: '#00a0e9'
     });
     this.polygon.segments.forEach(seg => {
       this.graphics.moveTo(seg.p1.x, seg.p1.y);
@@ -95,9 +100,20 @@ export class GraphEditor {
     })
 
     // 면적 표시
-    if (this.polygon.points.length > 2) {
-      const area = this.polygon.calculateArea();
-      console.log(`면적: ${area.toFixed(2)} 제곱픽셀`)
+    if (this.polygon.points.length < 3) return
+
+    this.graphics.setFillStyle({
+      color: '#00a0e9',
+      alpha: 0.2
+    })
+
+    this.graphics.moveTo(this.polygon.points[0].x, this.polygon.points[0].y)
+    for (let i = 1; i < this.polygon.points.length; i++){
+      this.graphics.lineTo(this.polygon.points[i].x, this.polygon.points[i].y)
     }
+    this.graphics.fill()
+
+    // const area = this.polygon.calculateArea();
+    // console.log(`면적: ${area.toFixed(2)} 제곱픽셀`)
   }
 }

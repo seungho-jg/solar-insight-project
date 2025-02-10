@@ -37,14 +37,21 @@
     });
     }
   }
-  function handleEstimateBtn() {
-    editorStore.toggleEditing()
-    $kakaoMap.setZoomable(false)
+  function handleStartSelect() {
+    editorStore.toggleEditing();
+    $kakaoMap.setZoomable(false);
+    $kakaoMap.setDraggable(false);
+    $kakaoMap.setCursor('crosshair');
   }
-  function handleEstimateCancel() {
-    editorStore.toggleEditing()
-    $editorStore.graphEditor?.reset()
-    $kakaoMap.setZoomable(true)
+  function handleCancelSelcet() {
+    editorStore.toggleEditing();
+    $editorStore.graphEditor?.reset();
+    $kakaoMap.setZoomable(true);
+    $kakaoMap.setDraggable(true);
+    $kakaoMap.setCursor('move');
+  }
+  function handleCompleteSelect() {
+
   }
 </script>
 
@@ -83,7 +90,7 @@
   >
     <Button 
       class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-      onclick={handleEstimateBtn}
+      onclick={handleStartSelect}
       >
       영역선택
     </Button>
@@ -94,12 +101,15 @@
   >
     <Button 
       class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-      onclick={handleEstimateCancel}
+      onclick={handleCancelSelcet}
       >
       선택해제
     </Button>
-    <Button class="bg-slate-400 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold">
-      견적내기
+    <Button 
+      class="bg-slate-400 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+      onclick={handleCompleteSelect}
+      >
+      선택완료
     </Button>
   </div>
   {/if}

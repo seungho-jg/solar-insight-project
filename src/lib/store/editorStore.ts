@@ -3,11 +3,13 @@ import type { GraphEditor } from '../tools/graphEditor';
 
 interface EditorState {
   isEditing: boolean;
-  graphEditor: GraphEditor | null
+  isComplete: boolean;
+  graphEditor: GraphEditor | null;
 }
 
 const initialState: EditorState = {
   isEditing: false,
+  isComplete: false,
   graphEditor: null
 };
 
@@ -17,7 +19,7 @@ function createEditorStore() {
   return {
     subscribe,
     toggleEditing: () => update(state => ({ ...state, isEditing: !state.isEditing })),
-    reset: (graphEditor: GraphEditor) => set({ isEditing: false, graphEditor })
+    reset: (graphEditor: GraphEditor) => set({ isEditing: false, isComplete: false, graphEditor })
   };
 }
 

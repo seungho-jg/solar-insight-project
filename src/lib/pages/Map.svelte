@@ -53,6 +53,7 @@
       };
       // map = new window.kakao.maps.Map(container, options);
       kakaoMap.set(new window.kakao.maps.Map(container, options))
+      $kakaoMap.setCursor('move')
       await initPixi()
     }
     initMap()
