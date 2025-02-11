@@ -1,6 +1,6 @@
 <script lang="ts">
   import Map from '$lib/pages/Map.svelte';
-  import {Alert, AlertTitle, AlertDescription} from '$lib/components/ui/alert';
+  import {Alert, AlertDescription} from '$lib/components/ui/alert';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
   import { editorStore } from '$lib/store/editorStore';
   import Input from '$lib/components/ui/input/input.svelte';
@@ -40,7 +40,7 @@
         showAlert = true;
         setTimeout(() => {
           showAlert = false;
-        }, 1000); // 3초 후 알림 숨김
+        }, 1000);
       }
     });
     }
@@ -65,10 +65,12 @@
       showAlert = true;
       setTimeout(() => {
         showAlert = false;
-      }, 2000); // 3초 후 알림 숨김
+      }, 2000);
       return;
     }
     editorStore.toggleComplete();
+    $editorStore.panelEditor?.setArea($editorStore.graphEditor.getPolygon())
+    $editorStore.panelEditor?.draw()
   }
 </script>
 
@@ -83,7 +85,7 @@
 
 {#if showAlert}
   <div class="fixed top-4 left-1/2 -translate-x-1/2 z-30" transition:fly={{ y: -20 }}>
-    <Alert variant="destructive" class="bg-white shadow-lg border-2 py-2">
+    <Alert variant="destructive" class="bg-white shadow-lg border-2 py-2 backdrop-blur-sm">
       <!-- <AlertTitle level={1}>다시</AlertTitle> -->
       <AlertDescription>{errorMsg}</AlertDescription>
     </Alert>

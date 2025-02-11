@@ -9,7 +9,6 @@ export class GraphEditor {
   polygon: Polygon;
   isDrawing: boolean;
   private latLngPoints: Array<{lat: number, lng: number}>
-  cursor: [x: number, y: number]
 
   constructor(app: PIXI.Application, map: any) {
     this.app = app;
@@ -18,7 +17,6 @@ export class GraphEditor {
     this.polygon = new Polygon();
     this.isDrawing = false;
     this.latLngPoints = [];
-    this.cursor = [-1, -1];
 
     app.stage.addChild(this.graphics);
     this.#addEventListeners();
@@ -78,6 +76,39 @@ export class GraphEditor {
     this.draw()
   }
 
+  // 다각형 면적 계산
+  calculateArea(): number {
+    if (this.latLngPoints.length < 3) return 0;
+
+    const path = this.latLngPoints.map(point => 
+      new window.kakao.maps.LatLng(point.lat, point.lng)
+    );
+
+    // 폴리곤 생성
+    const polygon = new window.kakao.maps.Polygon({
+      path: path
+    });
+
+    // 면적 계산 (제곱미터 단위)
+    return polygon.getArea();
+  }
+
+    // 다각형 면적 계산
+    getPolygon() {
+      if (this.latLngPoints.length < 3) return null;
+  
+      const path = this.latLngPoints.map(point => 
+        new window.kakao.maps.LatLng(point.lat, point.lng)
+      );
+  
+      // 폴리곤 생성
+      const polygon = new window.kakao.maps.Polygon({
+        path: path
+      });
+  
+      return polygon
+    }
+
   draw(){
     this.graphics.clear();
 
@@ -112,8 +143,5 @@ export class GraphEditor {
       this.graphics.lineTo(this.polygon.points[i].x, this.polygon.points[i].y)
     }
     this.graphics.fill()
-
-    // const area = this.polygon.calculateArea();
-    // console.log(`면적: ${area.toFixed(2)} 제곱픽셀`)
   }
 }

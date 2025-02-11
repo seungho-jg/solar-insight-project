@@ -3,11 +3,13 @@
   import { GraphEditor } from '../tools/graphEditor';
   import { editorStore } from '../store/editorStore';
   import { kakaoMap } from '$lib/store/mapStore'
+  import { PanelEditor } from '../tools/panelEditor';
 
   let container: any;
   let pixiCanvas: any;
   let sprite: PIXI.Sprite;
   let graphEditor = $state<GraphEditor>();
+  let panelEditor = $state<PanelEditor>();
   
   $effect(() => {
     // graphEditor가 생성된 후 스토어 구독
@@ -41,7 +43,8 @@
       app.stage.addChild(sprite);
 
       graphEditor = new GraphEditor(app, $kakaoMap);
-      editorStore.reset(graphEditor)
+      panelEditor = new PanelEditor(app, $kakaoMap)
+      editorStore.reset(graphEditor, panelEditor)
   }
 
   $effect(() => {
