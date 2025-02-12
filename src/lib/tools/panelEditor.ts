@@ -10,9 +10,9 @@ interface bounds {
 }
 
 export class PanelEditor {
-  SPACING: number = 10
-  WIDTH: number = 50
-  HEIGHT: number = 25
+  SPACING: number = 0.5
+  WIDTH: number = 4
+  HEIGHT: number = 6
 
   solarPanels: SolarPanel[]
   app: PIXI.Application
@@ -75,7 +75,6 @@ export class PanelEditor {
   }
 
   calculateBounds(): bounds {
-    console.log(this.polygon)
     if (!this.polygon?.Ug || this.polygon.Ug.length < 3) {
       throw new Error("유효한 폴리곤이 없습니다.");
     }
@@ -113,7 +112,7 @@ export class PanelEditor {
     const x = point.getLng();
     const y = point.getLat();
 
-    // Ray Casting 알고리즘 구현
+    // Ray Casting 알고리즘
     for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
         const xi = vertices[i].La;  // 현재 점의 경도
         const yi = vertices[i].Ma;  // 현재 점의 위도

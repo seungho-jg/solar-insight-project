@@ -71,6 +71,7 @@
     editorStore.toggleComplete();
     $editorStore.panelEditor?.setArea($editorStore.graphEditor.getPolygon())
     $editorStore.panelEditor?.draw()
+    $editorStore.graphEditor?.draw()
   }
 </script>
 

@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { Point } from '$lib/primitives/point'
 import { Polygon } from '$lib/primitives/polygon'
+import { editorStore } from '../store/editorStore';
+import { get } from 'svelte/store';
 
 export class GraphEditor {
   app: PIXI.Application;
@@ -39,7 +41,7 @@ export class GraphEditor {
   }
 
   #handleMouseClick(mouseEvent: any) {
-    if (!this.isDrawing) return
+    if (!this.isDrawing || get(editorStore).isComplete) return
     const latlng = mouseEvent.latLng;
       // 위경도 좌표 저장
       this.latLngPoints.push({
@@ -124,11 +126,13 @@ export class GraphEditor {
     })
 
     // 점 그리기
-    this.graphics.setFillStyle({color: 'red'});
-    this.polygon.points.forEach(point => {
-      this.graphics.circle(point.x, point.y, 5)
-      this.graphics.fill()
-    })
+    if (!get(editorStore).isComplete) {
+      this.graphics.setFillStyle({color: 'red'});
+      this.polygon.points.forEach(point => {
+        this.graphics.circle(point.x, point.y, 5)
+        this.graphics.fill()
+      })
+    }
 
     // 면적 표시
     if (this.polygon.points.length < 3) return
