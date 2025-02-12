@@ -63,5 +63,5 @@
 </script>
 <div>
   <div id="pixiCanvas" class="w-screen h-screen absolute z-10"></div>
-  <div id="map" class="w-screen h-screen opacity-95" class:opacity-60={$editorStore.isComplete}></div>
+  <div id="map" class="w-screen h-screen opacity-95" class:opacity-50={$editorStore.isComplete}></div>
 </div>

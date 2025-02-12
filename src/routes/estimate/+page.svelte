@@ -1,4 +1,6 @@
+
 <script lang="ts">
+
   import Map from '$lib/pages/Map.svelte';
   import {Alert, AlertDescription} from '$lib/components/ui/alert';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
@@ -8,6 +10,8 @@
   import { writable } from 'svelte/store';
   import { kakaoMap } from '$lib/store/mapStore'
   import { fly } from 'svelte/transition';
+  import  * as Carousel from '$lib/components/ui/carousel/index';
+  import Card from '@/lib/components/ui/card/card.svelte';
 
   let address = $state('');
   let searchResults = writable<any>([]);
@@ -53,12 +57,13 @@
   }
   function handleCancelSelcet() {
     editorStore.toggleEditing();
+    editorStore.toggleComplete();
     $editorStore.graphEditor?.reset();
+    $editorStore.panelEditor?.reset();
     $kakaoMap.setZoomable(true);
     $kakaoMap.setDraggable(true);
     $kakaoMap.setCursor('move');
   }
-
   function handleCompleteSelect() {
     if (!$editorStore.graphEditor?.polygon?.points?.length || $editorStore.graphEditor.polygon.points.length < 3) {
       errorMsg = '최소 점 3개 이상이 필요합니다 !'
@@ -72,6 +77,7 @@
     $editorStore.panelEditor?.setArea($editorStore.graphEditor.getPolygon())
     $editorStore.panelEditor?.draw()
     $editorStore.graphEditor?.draw()
+    $kakaoMap.setDraggable(true);
   }
 </script>
 
@@ -87,10 +93,34 @@
 {#if showAlert}
   <div class="fixed top-4 left-1/2 -translate-x-1/2 z-30" transition:fly={{ y: -20 }}>
     <Alert variant="destructive" class="bg-white shadow-lg border-2 py-2 backdrop-blur-sm">
-      <!-- <AlertTitle level={1}>다시</AlertTitle> -->
       <AlertDescription>{errorMsg}</AlertDescription>
     </Alert>
   </div>
+{/if}
+
+{#if $editorStore.isEditing&&$editorStore.isComplete} 
+<div
+  in:fly={{y: -25}}
+  class="w-full fixed top-4 z-30">
+  <Carousel.Root
+    opts={{
+      align: "start"
+    }}
+    class=" w-1/2 mx-auto"
+  >
+    <Carousel.Content>
+      {#each [1,2,3,4] as i}
+      <Carousel.Item
+        class="md:basis-1/3 sm:basis-1/2"
+      >
+        <Card>{i}</Card>
+      </Carousel.Item>
+      {/each}
+    </Carousel.Content>
+    <Carousel.Previous />
+  <Carousel.Next />
+  </Carousel.Root>
+</div>
 {/if}
 
 {#if !$editorStore.isEditing&&!$editorStore.isComplete}
@@ -146,7 +176,15 @@
   <div
     in:fly={{ y: 20 }} 
   >
-    <Button>
+      <Button 
+      class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+      onclick={handleCancelSelcet}
+      >
+      돌아가기
+    </Button>
+    <Button
+      class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+    >
       견적내기
     </Button>
   </div>

@@ -10,9 +10,10 @@ interface bounds {
 }
 
 export class PanelEditor {
-  SPACING: number = 0.5
-  WIDTH: number = 4
-  HEIGHT: number = 6
+  SPACING_X: number = -0.5
+  SPACING_Y: number = 1.5
+  WIDTH: number = 5
+  HEIGHT: number = 2
 
   solarPanels: SolarPanel[]
   app: PIXI.Application
@@ -30,6 +31,12 @@ export class PanelEditor {
 
     this.#addEventListeners();
   }
+
+  reset(){
+    this.polygon = null
+    this.solarPanels = [];  
+    this.draw()
+  }
   
   #addEventListeners() {
     window.kakao.maps.event.addListener(this.map, 'bounds_changed', () => {
@@ -46,7 +53,6 @@ export class PanelEditor {
   setPanelSize(width: number, height: number) {
     this.WIDTH = width
     this.HEIGHT = height
-    this.SPACING = 0.5
   }
 
   calculatePanelPositions() {
@@ -56,8 +62,8 @@ export class PanelEditor {
     const metersPerLat = 111000 // 위도 1도 111km
     const metersPerLng = Math.cos(bounds.center.lat * Math.PI / 180) * 111000
     
-    const panelSpacingX = this.WIDTH + this.SPACING
-    const panelSpacingY = this.HEIGHT + this.SPACING
+    const panelSpacingX = this.WIDTH + this.SPACING_X
+    const panelSpacingY = this.HEIGHT + this.SPACING_Y
 
     for (let lat = bounds.south; lat <= bounds.north; lat += panelSpacingY / metersPerLat) {
       for (let lng = bounds.west; lng <= bounds.east; lng += panelSpacingX / metersPerLng) {
@@ -129,6 +135,7 @@ export class PanelEditor {
   }
 
   draw() {
+    this.graphics.clear()
     this.solarPanels.forEach(panel => {
       panel.draw(this.graphics, this.map)
     })
