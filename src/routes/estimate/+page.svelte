@@ -2,23 +2,64 @@
   let fakedata = [
     {
       id: 0,
+      src: "https://picsum.photos/id/1/200/300",
       name: 'test01',
       wph: 240,
       width: 2.4,
-      height: 4
+      height: 4,
+      cost: 14000,
     },
     {
       id: 1,
+      src: "https://picsum.photos/id/2/200/300",
       name: 'test02',
       wph: 240,
       width: 2.4,
-      height: 4
+      height: 4,
+      cost: 14000,
+    },
+    {
+      id: 2,
+      src: "https://picsum.photos/id/3/200/300",
+      name: 'test03',
+      wph: 240,
+      width: 2.4,
+      height: 4,
+      cost: 14000,
+    },
+    {
+      id: 3,
+      src: "https://picsum.photos/id/4/200/300",
+      name: 'test04',
+      wph: 240,
+      width: 2.4,
+      height: 4,
+      cost: 14000,
+    },
+    {
+      id: 4,
+      src: "https://picsum.photos/id/5/200/300",
+      name: 'test05',
+      wph: 240,
+      width: 2.4,
+      height: 4,
+      cost: 14000,
+    },
+    {
+      id: 5,
+      src: "https://picsum.photos/id/6/200/300",
+      name: 'test06',
+      wph: 240,
+      width: 2.4,
+      height: 4,
+      cost: 14000,
     }
   ]
   import Map from '$lib/pages/Map.svelte';
   import {Alert, AlertDescription} from '$lib/components/ui/alert';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
   import { editorStore } from '$lib/store/editorStore';
+  import { estimateStore } from '$lib/store/estimateStore';
   import Input from '$lib/components/ui/input/input.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
   import { writable } from 'svelte/store';
@@ -72,13 +113,14 @@
   }
   function handleCancelSelcet() {
     editorStore.toggleEditing();
-    editorStore.toggleComplete();
+    editorStore.setComplete(false);
     $editorStore.graphEditor?.reset();
     $editorStore.panelEditor?.reset();
     $kakaoMap.setZoomable(true);
     $kakaoMap.setDraggable(true);
     $kakaoMap.setCursor('move');
   }
+
   function handleCompleteSelect() {
     if (!$editorStore.graphEditor?.polygon?.points?.length || $editorStore.graphEditor.polygon.points.length < 3) {
       errorMsg = '최소 점 3개 이상이 필요합니다 !'
@@ -113,10 +155,10 @@
   </div>
 {/if}
 
-{#if true || $editorStore.isEditing&&$editorStore.isComplete} 
+{#if $editorStore.isEditing&&$editorStore.isComplete} 
 <div
   in:fly={{y: -25}}
-  class="w-full fixed top-4 z-30">
+  class="group w-full fixed top-4 z-30">
   <Carousel.Root
     opts={{
       align: "start"
@@ -126,9 +168,14 @@
     <Carousel.Content>
       {#each fakedata as data}
       <Carousel.Item
-        class="md:basis-1/3 sm:basis-1/2 drop-shadow-lg"
+        class="2xl:basis-1/5 lg:basis-1/3 sm:basis-1/2"
       >
-        <PanelSelectCard {...data}></PanelSelectCard>
+        <PanelSelectCard 
+          isSelect={$estimateStore.currentPanelId === data.id} 
+          onclick={() => estimateStore.setCurrentPanelId(data.id)}
+          {...data}
+        >
+      </PanelSelectCard>
       </Carousel.Item>
       {/each}
     </Carousel.Content>

@@ -5,10 +5,12 @@ import Root, {
 	buttonVariants,
 } from "./button.svelte";
 import ButtonMain from "./button-main.svelte";
+import ButtonSmall from "./button-small.svelte"
 
 export {
 	Root,
 	ButtonMain,
+	ButtonSmall,
 	type ButtonProps as Props,
 	//
 	Root as Button,
