@@ -1,6 +1,20 @@
-
 <script lang="ts">
-
+  let fakedata = [
+    {
+      id: 0,
+      name: 'test01',
+      wph: 240,
+      width: 2.4,
+      height: 4
+    },
+    {
+      id: 1,
+      name: 'test02',
+      wph: 240,
+      width: 2.4,
+      height: 4
+    }
+  ]
   import Map from '$lib/pages/Map.svelte';
   import {Alert, AlertDescription} from '$lib/components/ui/alert';
   import { PUBLIC_KAKAO_MAP_API_KEY } from '$env/static/public';
@@ -11,7 +25,8 @@
   import { kakaoMap } from '$lib/store/mapStore'
   import { fly } from 'svelte/transition';
   import  * as Carousel from '$lib/components/ui/carousel/index';
-  import Card from '@/lib/components/ui/card/card.svelte';
+  import PanelSelectCard from '$lib/components/ui/card/PanelSelectCard.svelte';
+  import MainBtn from '$lib/components/ui/button/button-main.svelte'
 
   let address = $state('');
   let searchResults = writable<any>([]);
@@ -98,7 +113,7 @@
   </div>
 {/if}
 
-{#if $editorStore.isEditing&&$editorStore.isComplete} 
+{#if true || $editorStore.isEditing&&$editorStore.isComplete} 
 <div
   in:fly={{y: -25}}
   class="w-full fixed top-4 z-30">
@@ -109,11 +124,11 @@
     class=" w-1/2 mx-auto"
   >
     <Carousel.Content>
-      {#each [1,2,3,4] as i}
+      {#each fakedata as data}
       <Carousel.Item
-        class="md:basis-1/3 sm:basis-1/2"
+        class="md:basis-1/3 sm:basis-1/2 drop-shadow-lg"
       >
-        <Card>{i}</Card>
+        <PanelSelectCard {...data}></PanelSelectCard>
       </Carousel.Item>
       {/each}
     </Carousel.Content>
@@ -148,45 +163,46 @@
   <div
   in:fly={{ y: 20 }} 
   >
-    <Button 
-      class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+    <MainBtn 
+      variant="default"
+      class="drop-shadow-lg bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
       onclick={handleStartSelect}
       >
       영역선택
-    </Button>
+    </MainBtn>
   </div>
   {:else if $editorStore.isEditing&&!$editorStore.isComplete}
   <div 
     in:fly={{ y: 20 }} 
   >
-    <Button 
-      class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+    <MainBtn
+      variant="cancel" 
       onclick={handleCancelSelcet}
       >
       선택해제
-    </Button>
-    <Button 
-      class="bg-slate-400 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+    </MainBtn>
+    <MainBtn
+      variant="default"
       onclick={handleCompleteSelect}
       >
       선택완료
-    </Button>
+    </MainBtn>
   </div>
   {:else}
   <div
     in:fly={{ y: 20 }} 
   >
-      <Button 
-      class="bg-rose-300 hover:bg-rose-500 px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
-      onclick={handleCancelSelcet}
+      <MainBtn 
+        variant="cancel" 
+        onclick={handleCancelSelcet}
       >
       돌아가기
-    </Button>
-    <Button
-      class="bg-stone-700 px-6 py-3 rounded-xl hover:bg-stone-500 transition-all duration-200 shadow-lg hover:shadow-xl text-white font-semibold"
+    </MainBtn>
+    <MainBtn
+      variant="default"
     >
       견적내기
-    </Button>
+    </MainBtn>
   </div>
   {/if}
 </div>
